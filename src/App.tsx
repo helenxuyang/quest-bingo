@@ -1,9 +1,9 @@
 import './App.css';
-import { QuestsPage } from './components/BingoPage';
+import { BingoPage } from './components/BingoPage';
 
 const App = () => {
   return <main>
-    <QuestsPage />
+    <BingoPage />
   </main>
 
 }

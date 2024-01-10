@@ -6,9 +6,9 @@ const getCardColor = (questCategory: QuestCategory) => {
     case 'EXERCISE':
       return 'darkslateblue';
     case 'WALK':
-      return 'steelblue';
+      return 'slateblue';
     default:
-      return 'black';
+      return 'steelblue';
   }
 }
 

@@ -2,23 +2,24 @@ import { allExercises } from "../data/exercises";
 import { scavengerHuntObjects } from "../data/scavenger";
 import { Exercise } from "../models/Exercise";
 import { Quest, QuestCategory } from "../models/Quest";
+import { todayRNG } from "./randomUtils";
 
 const generateWalkQuest = (): Quest => {
-  const randomLetter = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-  const randomNumber = Math.floor(Math.random() * 100);
+  const randomLetter = String.fromCharCode(Math.floor(todayRNG() * 26) + 65);
+  const randomNumber = Math.floor(todayRNG() * 100);
   const allObjects = [
     `the letter ${randomLetter}`, `the number ${randomNumber}`,
     ...scavengerHuntObjects
   ];
 
   const shuffledObjects = allObjects
-    .map(obj => ({ obj, sort: Math.random() }))
+    .map(obj => ({ obj, sort: todayRNG() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ obj }) => obj)
 
   const max = 5;
   const min = 3;
-  const numObjects = Math.floor(Math.random() * (max - min) + min);
+  const numObjects = Math.floor(todayRNG() * (max - min) + min);
   const objects = shuffledObjects.slice(0, numObjects);
 
   return {
@@ -33,9 +34,9 @@ const generateWalkQuest = (): Quest => {
 }
 
 const generateExerciseQuest = (exercises: Exercise[]) => {
-  const randomIndex = Math.floor(Math.random() * exercises.length);
+  const randomIndex = Math.floor(todayRNG() * exercises.length);
   const { name, style, min, max, difficulty } = exercises[randomIndex];
-  const reps = Math.floor(Math.random() * (max - min + 1) + min);
+  const reps = Math.floor(todayRNG() * (max - min + 1) + min);
   return {
     objective: `Exercise: ${reps}${style === 'TIMED' ? ' sec' : ''} ${name}`,
     category: 'EXERCISE',

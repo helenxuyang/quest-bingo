@@ -3,10 +3,12 @@ import { Quest } from '../models/Quest';
 import { QuestCard } from './QuestCard';
 import { freeSquareQuest, generateQuests } from '../utils/questGeneration';
 import { BingoBoard } from './bingoStyles';
+import { todayRNG } from '../utils/randomUtils';
+import { getStoredXP, storeXP } from '../utils/storageUtils';
 
-export const QuestsPage = () => {
+export const BingoPage = () => {
   const [quests, setQuests] = useState<Quest[]>([]);
-  const [totalXP, setTotalXP] = useState<number>(Number(localStorage.getItem('xp')) ?? 0);
+  const [totalXP, setTotalXP] = useState<number>(getStoredXP());
   const BINGO_SIZE = 5;
 
   useEffect(() => {
@@ -15,17 +17,12 @@ export const QuestsPage = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('xp', totalXP.toString());
+    storeXP(totalXP);
   }, [totalXP]);
-
-  // const setSortedQuests = (newQuests: Quest[]) => {
-  //   const sortedQuests = newQuests.sort((q1, q2) => q1.category < q2.category ? 1 : -1);
-  //   setQuests(sortedQuests);
-  // }
 
   const randomizeOrder = (quests: Quest[]) => {
     return quests
-      .map(value => ({ value, sort: Math.random() }))
+      .map(value => ({ value, sort: todayRNG() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
   }
@@ -37,14 +34,11 @@ export const QuestsPage = () => {
     return quests;
   }
 
-  const completeQuest = (questIndex: number) => {
+  const updateQuest = (questIndex: number, completed: boolean) => {
     const quest = quests[questIndex];
-    setTotalXP(totalXP + quest.xp);
-  }
-
-  const undoCompleteQuest = (questIndex: number) => {
-    const quest = quests[questIndex];
-    setTotalXP(totalXP - quest.xp);
+    const newXP = totalXP + (completed ? quest.xp : -quest.xp);
+    setTotalXP(newXP);
+    console.log(newXP);
   }
 
   // const getQuestChunks = (quests: Quest[]): Quest[][] => {
@@ -76,12 +70,16 @@ export const QuestsPage = () => {
     <button onClick={() => {
       setTotalXP(0);
     }}>Reset XP</button>
+    <button onClick={() => {
+      localStorage.clear();
+    }}>Clear storage</button>
     <BingoBoard>
       {quests.map((quest, idx) =>
         <QuestCard
+          key={quest.objective + idx.toString()}
+          index={idx}
           quest={quest}
-          completeQuest={() => completeQuest(idx)}
-          undoCompleteQuest={() => undoCompleteQuest(idx)}
+          updateQuest={updateQuest}
         />
       )}
     </BingoBoard>
