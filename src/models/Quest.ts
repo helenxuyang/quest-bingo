@@ -1,11 +1,13 @@
 export type Quest = {
+  id?: string;
   objective: string;
   category: QuestCategory;
   xp: number;
+  completed: boolean;
   subgoals?: Subgoal[];
 }
 
-const QuestCategories = ['EXERCISE', 'WALK', 'DAILY'];
+const QuestCategories = ['HYDRATION', 'EXERCISE', 'WALK', 'DAILY'];
 
 export type QuestCategory = typeof QuestCategories[number];
 

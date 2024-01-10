@@ -1,5 +1,5 @@
 import './App.css';
-import { BingoPage } from './components/BingoPage';
+import { BingoPage } from './pages/BingoPage';
 
 const App = () => {
   return <main>
